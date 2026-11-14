@@ -1,0 +1,93 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R /Outlines 4 0 R /PageMode /UseOutlines >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 6 0 R 7 0 R 8 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Outlines /First 13 0 R /Last 14 0 R /Count 2 >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 9 0 R >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 10 0 R >>
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 12 0 R >>
+endobj
+9 0 obj
+<< /Length 557 >>
+stream
+BT /F1 12 Tf 72 720 Td (Front matter. This short book tests chapter bookmarks.) Tj ET
+BT /F1 12 Tf 72 680 Td (It has four pages of simple text for extraction.) Tj ET
+BT /F1 12 Tf 72 640 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 600 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 560 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 520 Td (These words are here so that each chapter is long enough to count.) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Length 520 >>
+stream
+BT /F1 12 Tf 72 720 Td (Chapter One) Tj ET
+BT /F1 12 Tf 72 680 Td (It was a bright cold day and the clocks were striking.) Tj ET
+BT /F1 12 Tf 72 640 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 600 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 560 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 520 Td (These words are here so that each chapter is long enough to count.) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Length 160 >>
+stream
+BT /F1 12 Tf 72 720 Td (The first chapter carries on across a page break here.) Tj ET
+BT /F1 12 Tf 72 680 Td (Still chapter one, ending with a full stop.) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Length 506 >>
+stream
+BT /F1 12 Tf 72 720 Td (Chapter Two) Tj ET
+BT /F1 12 Tf 72 680 Td (A new chapter begins on the fourth page.) Tj ET
+BT /F1 12 Tf 72 640 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 600 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 560 Td (These words are here so that each chapter is long enough to count.) Tj ET
+BT /F1 12 Tf 72 520 Td (These words are here so that each chapter is long enough to count.) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Title (Chapter One) /Parent 4 0 R /Next 14 0 R /Dest [6 0 R /XYZ 0 792 0] >>
+endobj
+14 0 obj
+<< /Title (Chapter Two) /Parent 4 0 R /Prev 13 0 R /Dest [8 0 R /XYZ 0 792 0] >>
+endobj
+xref
+0 15
+0000000000 65535 f 
+0000000009 00000 n 
+0000000097 00000 n 
+0000000172 00000 n 
+0000000242 00000 n 
+0000000315 00000 n 
+0000000441 00000 n 
+0000000568 00000 n 
+0000000695 00000 n 
+0000000822 00000 n 
+0000001430 00000 n 
+0000002002 00000 n 
+0000002214 00000 n 
+0000002772 00000 n 
+0000002869 00000 n 
+trailer
+<< /Size 15 /Root 1 0 R >>
+startxref
+2966
+%%EOF

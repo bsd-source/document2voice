@@ -1,0 +1,32 @@
+[package]
+name = "document2voice-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Document2Voice core — offline Kokoro ONNX document to speech"
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+which.workspace = true
+dirs = "6"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+mobi = "0.8"
+# PDF bookmarks (outline) → chapter markers. Pure Rust; text itself still comes from pdftotext.
+lopdf = { version = "=0.45.0", default-features = false }
+
+# Vendored + patched tts-rs (Kokoro ONNX)
+tts-rs = { path = "../vendor/tts-rs", features = ["kokoro"] }
+
+# misaki-rs is used only as a library: its English word list (ALL-CAPS words vs
+# acronyms in the speech sanitizer) and its part-of-speech tagger (heteronyms for
+# espeak; tagger data vendored in data/pos-tagger/). Not used for phonemes.
+# default-features = false: no espeak-rs-sys / libclang build dependency.
+misaki-rs = { version = "0.3.0", default-features = false }
+

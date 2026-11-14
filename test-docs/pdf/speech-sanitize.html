@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Document2Voice speech sanitize test</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  body {
+    font-family: "Noto Sans", "DejaVu Sans", "Liberation Sans", sans-serif;
+    font-size: 11pt;
+    line-height: 1.35;
+    color: #111;
+    max-width: 185mm;
+    margin: 0 auto;
+  }
+  h2 {
+    font-size: 12pt;
+    margin: 14pt 0 8pt;
+    padding: 4pt 8pt;
+    background: #1a1a1a;
+    color: #fff;
+    page-break-after: avoid;
+  }
+  .case {
+    border: 1px solid #bbb;
+    margin: 0 0 14pt;
+    padding: 10pt 10pt 8pt;
+    page-break-inside: avoid;
+    background: #fafafa;
+  }
+  /* Block paragraphs with space so pdftotext emits blank lines between them */
+  .case p {
+    margin: 0 0 0.95em;
+    padding: 0;
+  }
+  .case p:last-child { margin-bottom: 0; }
+  .id {
+    font-weight: 800;
+    font-size: 13pt;
+    font-family: "Noto Sans Mono", "Liberation Mono", monospace;
+    color: #0b3d91;
+  }
+  .sample { font-weight: 700; font-size: 12pt; }
+  .fail-lead { font-weight: 700; font-size: 10.5pt; color: #111; }
+  .fail-body { color: #b00020; font-weight: 700; font-size: 11pt; }
+</style>
+</head>
+<body>
+<h2>A — Dashes</h2>
+<div class="case">
+<p class="id">Test A01</p>
+<p class="sample">Hello — world</p>
+<p class="sample">Hello — world</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“circumflex” or “em dash”</p>
+</div>
+<div class="case">
+<p class="id">Test A02</p>
+<p class="sample">Hello – world</p>
+<p class="sample">Hello – world</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“en dash” or “circumflex”</p>
+</div>
+<div class="case">
+<p class="id">Test A03</p>
+<p class="sample">Alpha ‒ beta ― gamma − delta</p>
+<p class="sample">Alpha ‒ beta ― gamma − delta</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“figure dash” or “horizontal bar” or “circumflex”</p>
+</div>
+<div class="case">
+<p class="id">Test A04</p>
+<p class="sample">Hello -- world</p>
+<p class="sample">Hello -- world</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“hyphen hyphen”</p>
+</div>
+<div class="case">
+<p class="id">Test A05</p>
+<p class="sample">Wait… go Wait... go</p>
+<p class="sample">Wait… go Wait... go</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“dot dot dot” or “ellipsis”</p>
+</div>
+<div class="case">
+<p class="id">Test A06</p>
+<p class="sample">The end—really</p>
+<p class="sample">The end—really</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“circumflex”</p>
+</div>
+<h2>B — Ranges</h2>
+<div class="case">
+<p class="id">Test B01</p>
+<p class="sample">Pages 1–5</p>
+<p class="sample">Pages 1–5</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“one five” (no “to”) or “en dash” or “circumflex”</p>
+</div>
+<div class="case">
+<p class="id">Test B02</p>
+<p class="sample">Pages 10-20</p>
+<p class="sample">Pages 10-20</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“ten twenty” (no “to”)</p>
+</div>
+<div class="case">
+<p class="id">Test B03</p>
+<p class="sample">A well-known fact</p>
+<p class="sample">A well-known fact</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“well to known”</p>
+</div>
+<h2>C — Circumflex bait</h2>
+<div class="case">
+<p class="id">Test C01</p>
+<p class="sample">x^2 mark</p>
+<p class="sample">x^2 mark</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“caret” or “circumflex”</p>
+</div>
+<div class="case">
+<p class="id">Test C02</p>
+<p class="sample">Before ˆ after</p>
+<p class="sample">Before ˆ after</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“circumflex” or “letter two C six”</p>
+</div>
+<div class="case">
+<p class="id">Test C03</p>
+<p class="sample">Before ̂ after</p>
+<p class="sample">Before ̂ after</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“circumflex”</p>
+</div>
+<div class="case">
+<p class="id">Test C04</p>
+<p class="sample">The hôtel and the rôle</p>
+<p class="sample">The hôtel and the rôle</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“O circumflex” or “letter circumflex”</p>
+</div>
+<div class="case">
+<p class="id">Test C05</p>
+<p class="sample">Marks â ê î ô û</p>
+<p class="sample">Marks â ê î ô û</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“A circumflex” or “E circumflex” or “I circumflex” or “O circumflex” or “U circumflex”</p>
+</div>
+<h2>D — Quotes and ligatures</h2>
+<div class="case">
+<p class="id">Test D01</p>
+<p class="sample">She said “hello there”</p>
+<p class="sample">She said “hello there”</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“left double quotation mark” or “right double quotation mark”</p>
+</div>
+<div class="case">
+<p class="id">Test D02</p>
+<p class="sample">It’s a ‘quoted’ word</p>
+<p class="sample">It’s a ‘quoted’ word</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“right single quotation mark” or “left single quotation mark”</p>
+</div>
+<div class="case">
+<p class="id">Test D03</p>
+<p class="sample">The ﬁle and ﬂame and eﬀect</p>
+<p class="sample">The ﬁle and ﬂame and eﬀect</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“ligature” or “fi ligature” or “fl ligature”</p>
+</div>
+<h2>E — Bullets and brackets</h2>
+<div class="case">
+<p class="id">Test E01</p>
+<p class="sample">• First • Second · Third</p>
+<p class="sample">• First • Second · Third</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“bullet” or “middle dot”</p>
+</div>
+<div class="case">
+<p class="id">Test E02</p>
+<p class="sample">See (note) and [aside] and {block}</p>
+<p class="sample">See (note) and [aside] and {block}</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“left parenthesis” or “left square bracket” or “left curly bracket”</p>
+</div>
+<div class="case">
+<p class="id">Test E03</p>
+<p class="sample">Star * and ◆ and ★</p>
+<p class="sample">Star * and ◆ and ★</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“asterisk” or “black diamond” or “black star”</p>
+</div>
+<div class="case">
+<p class="id">Test E04</p>
+<p class="sample">Note † and ‡ and ¶</p>
+<p class="sample">Note † and ‡ and ¶</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“dagger” or “double dagger” or “pilcrow”</p>
+</div>
+<h2>F — Symbols and money</h2>
+<div class="case">
+<p class="id">Test F01</p>
+<p class="sample">A &amp; B @ home 50%</p>
+<p class="sample">A &amp; B @ home 50%</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“ampersand” or “at sign” or “percent sign”</p>
+</div>
+<div class="case">
+<p class="id">Test F02</p>
+<p class="sample">Prices $5 €10 £3 ¥100</p>
+<p class="sample">Prices $5 €10 £3 ¥100</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“dollar sign” or “dollars five” or “euros ten” or “pounds three” or “yen one hundred”</p>
+</div>
+<div class="case">
+<p class="id">Test F02b</p>
+<p class="sample">Cost $5.99</p>
+<p class="sample">Cost $5.99</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“dollar sign” or “dollars 5 point 99”</p>
+</div>
+<div class="case">
+<p class="id">Test F03</p>
+<p class="sample">2 + 2 = 4 3 × 4 8 ÷ 2 90°</p>
+<p class="sample">2 + 2 = 4 3 × 4 8 ÷ 2 90°</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“plus sign” or “multiplication sign” or “division sign” or “degree sign”</p>
+</div>
+<div class="case">
+<p class="id">Test F04</p>
+<p class="sample">See §12 and #3</p>
+<p class="sample">See §12 and #3</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“section sign” or “hash” or “number sign”</p>
+</div>
+<div class="case">
+<p class="id">Test F05</p>
+<p class="sample">Add ½ and ¼</p>
+<p class="sample">Add ½ and ¼</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“vulgar fraction” or “one over two”</p>
+</div>
+<div class="case">
+<p class="id">Test F06</p>
+<p class="sample">Value ≈ 10 x ≤ y a ≠ b plus ± 1</p>
+<p class="sample">Value ≈ 10 x ≤ y a ≠ b plus ± 1</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“almost equal to” (the symbol’s name) or “plus-minus sign”, or any symbol silently skipped (“Value 10 x y a b”)</p>
+</div>
+<div class="case">
+<p class="id">Test F07</p>
+<p class="sample">About ~50% noise</p>
+<p class="sample">About ~50% noise</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“tilde” or “tilda”</p>
+</div>
+<h2>G — Junk silence</h2>
+<div class="case">
+<p class="id">Test G01</p>
+<p class="sample">Hello​world and Hello space</p>
+<p class="sample">Hello​world and Hello space</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“zero width space” or “non-breaking space”</p>
+</div>
+<div class="case">
+<p class="id">Test G02</p>
+<p class="sample">Hello 😀 world 🚀 done</p>
+<p class="sample">Hello 😀 world 🚀 done</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“grinning face” or “rocket”</p>
+</div>
+<div class="case">
+<p class="id">Test G03</p>
+<p class="sample">Brand™ Corp© pipe | slash \</p>
+<p class="sample">Brand™ Corp© pipe | slash \</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“trademark” or “copyright sign”</p>
+</div>
+<div class="case">
+<p class="id">Test G04</p>
+<p class="sample">Go A → B ← C ↔ D</p>
+<p class="sample">Go A → B ← C ↔ D</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“rightwards arrow” or “leftwards arrow” or “left right arrow”</p>
+</div>
+<div class="case">
+<p class="id">Test G05</p>
+<p class="sample">Hyphen­ation test</p>
+<p class="sample">Hyphen­ation test</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“soft hyphen”</p>
+</div>
+<h2>H — Book lines</h2>
+<div class="case">
+<p class="id">Test H01</p>
+<p class="sample">institutional gaslighting — are real</p>
+<p class="sample">institutional gaslighting — are real</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“circumflex” or “em dash”</p>
+</div>
+<div class="case">
+<p class="id">Test H02</p>
+<p class="sample">About 1,000 users</p>
+<p class="sample">About 1,000 users</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“dead pause inside the number” (not a spoken word — long silence)</p>
+</div>
+<div class="case">
+<p class="id">Test H03</p>
+<p class="sample">The “guide” — pages 1–5 — EMF &amp; RF @ home: ~50% noise $20 meters ★ end…</p>
+<p class="sample">The “guide” — pages 1–5 — EMF &amp; RF @ home: ~50% noise $20 meters ★ end…</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“tilda” or “tilde” or “circumflex” or “ampersand” or “dollar sign” or “black star” or “dot dot dot” or “ellipsis”</p>
+</div>
+<h2>I — Book English (human speech)</h2>
+<div class="case">
+<p class="id">Test I01</p>
+<p class="sample">Meet at 2:30 or 3:00 or 2:05</p>
+<p class="sample">Meet at 2:30 or 3:00 or 2:05</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“colon” or “two colon thirty”</p>
+</div>
+<div class="case">
+<p class="id">Test I02</p>
+<p class="sample">The 1st and 21st day</p>
+<p class="sample">The 1st and 21st day</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“one st” or “twenty one st” or “st” or “nd”</p>
+</div>
+<div class="case">
+<p class="id">Test I03</p>
+<p class="sample">Add 1/2 and 3/4 cup</p>
+<p class="sample">Add 1/2 and 3/4 cup</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“slash” or “one slash two” or “three slash four”</p>
+</div>
+<div class="case">
+<p class="id">Test I04</p>
+<p class="sample">Signal at 400 MHz and 2.4 GHz temp 72°F</p>
+<p class="sample">Signal at 400 MHz and 2.4 GHz temp 72°F</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“M H z” or “G H z” or “degree sign” or “seventy two degree F”</p>
+</div>
+<div class="case">
+<p class="id">Test I05</p>
+<p class="sample">Mr. Smith saw Dr. Jones e.g. vs. etc.</p>
+<p class="sample">Mr. Smith saw Dr. Jones e.g. vs. etc.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“M r” or “D r” or “e g” or “e period g” or “v s”</p>
+</div>
+<div class="case">
+<p class="id">Test I06</p>
+<p class="sample">See Chapter XIV and Part III</p>
+<p class="sample">See Chapter XIV and Part III</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“X I V” or “ex eye vee” or “I I I” or “roman”</p>
+</div>
+<div class="case">
+<p class="id">Test I07</p>
+<p class="sample">EMF and RF from NASA and the FBI</p>
+<p class="sample">EMF and RF from NASA and the FBI</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“emf” or “N A S A”</p>
+</div>
+<div class="case">
+<p class="id">Test I08</p>
+<p class="sample">See https://example.com/path and user@mail.co now</p>
+<p class="sample">See https://example.com/path and user@mail.co now</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“slash slash” or “h t t p” or “w w w” or “at sign” — want “example dot com” and “user at mail dot co”</p>
+</div>
+<div class="case">
+<p class="id">Test I09</p>
+<p class="sample">Call at 9 a.m. or 5 p.m.</p>
+<p class="sample">Call at 9 a.m. or 5 p.m.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“a period m” or “p period m” or “a m period”</p>
+</div>
+<div class="case">
+<p class="id">Test I10</p>
+<p class="sample">café naïve résumé</p>
+<p class="sample">café naïve résumé</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“e acute” or “a diaeresis” or “acute accent”, or “resume” said like the verb (ri-ZOOM) instead of REZ-oo-may</p>
+</div>
+<div class="case">
+<p class="id">Test I11</p>
+<p class="sample">Only $1 left and budget $1,000</p>
+<p class="sample">Only $1 left and budget $1,000</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“dollars 1” or “dollar sign” or “one thousand comma”</p>
+</div>
+<div class="case">
+<p class="id">Test I12</p>
+<p class="sample">About 5km and 10 kg and 60 mph</p>
+<p class="sample">About 5km and 10 kg and 60 mph</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“five k m” or “k g” or “m p h as letters”</p>
+</div>
+<div class="case">
+<p class="id">Test I13</p>
+<p class="sample">Ratio 5/8 and dates 03/20/2026 and 12/10/2025 and 3/15/2020</p>
+<p class="sample">Ratio 5/8 and dates 03/20/2026 and 12/10/2025 and 3/15/2020</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“slash” or “five slash eight” or “two thousand twenty six” (want “twenty twenty six”)</p>
+</div>
+<div class="case">
+<p class="id">Test I14</p>
+<p class="sample">OK use USB and PDF and AI tools</p>
+<p class="sample">OK use USB and PDF and AI tools</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“O K” or slow careful letter-mode “U.S.B.” or robotic capital “U S B”</p>
+</div>
+<h2>J — Real-book traps (caps, numerals, numbers, links)</h2>
+<div class="case">
+<p class="id">Test J01</p>
+<p class="sample">PRIDE AND PREJUDICE</p>
+<p class="sample">PRIDE AND PREJUDICE</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">letters spelled out: “P R I D E” or “A N D”</p>
+</div>
+<div class="case">
+<p class="id">Test J02</p>
+<p class="sample">THE END</p>
+<p class="sample">THE END</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“T H E” or “E N D” letter by letter</p>
+</div>
+<div class="case">
+<p class="id">Test J03</p>
+<p class="sample">“STOP!” he shouted. “GET OUT NOW.”</p>
+<p class="sample">“STOP!” he shouted. “GET OUT NOW.”</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“S T O P” or “G E T” — shouting must be read as words</p>
+</div>
+<div class="case">
+<p class="id">Test J04</p>
+<p class="sample">THE FBI ARRIVED with the BBC and EMF meters</p>
+<p class="sample">THE FBI ARRIVED with the BBC and EMF meters</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“fibby” or “bbc” as one word, or “A R R I V E D” spelled</p>
+</div>
+<div class="case">
+<p class="id">Test J05</p>
+<p class="sample">He moved to the US. LET US GO NOW.</p>
+<p class="sample">He moved to the US. LET US GO NOW.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“the us” (word) in the first sentence, or “let U S go” in the second</p>
+</div>
+<div class="case">
+<p class="id">Test J06</p>
+<p class="sample">World War II ended. Henry VIII and Elizabeth II met. Apollo XI flew.</p>
+<p class="sample">World War II ended. Henry VIII and Elizabeth II met. Apollo XI flew.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“I I”, “V I I I”, “X I” as letters, or “Henry eight” (want “Henry the Eighth”)</p>
+</div>
+<div class="case">
+<p class="id">Test J07</p>
+<p class="sample">It was −5 degrees, and -12 at night; COVID-19 spread.</p>
+<p class="sample">It was −5 degrees, and -12 at night; COVID-19 spread.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“5 degrees” with no “minus”, or “dash”, or “COVID minus 19”</p>
+</div>
+<div class="case">
+<p class="id">Test J08</p>
+<p class="sample">Call 555-123-4567 or 555-1234 today.</p>
+<p class="sample">Call 555-123-4567 or 555-1234 today.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“to” between the number groups (“555 to 123”)</p>
+</div>
+<div class="case">
+<p class="id">Test J09</p>
+<p class="sample">ISBN 978-3-16-148410-0</p>
+<p class="sample">ISBN 978-3-16-148410-0</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“to” between the groups, or “nine hundred seventy eight”</p>
+</div>
+<div class="case">
+<p class="id">Test J10</p>
+<p class="sample">Released 2024-01-15.</p>
+<p class="sample">Released 2024-01-15.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“to”, or “two thousand twenty four dash” — want “January fifteenth”</p>
+</div>
+<div class="case">
+<p class="id">Test J11</p>
+<p class="sample">It cost $5M, then $2.5k, then €3bn.</p>
+<p class="sample">It cost $5M, then $2.5k, then €3bn.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“dollars M”, “k”, “dollars and five cents”, or “euros b n”</p>
+</div>
+<div class="case">
+<p class="id">Test J12</p>
+<p class="sample">x^2 + y^3 and 10^6</p>
+<p class="sample">x^2 + y^3 and 10^6</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“caret”, “x two”, or “y three” — want “x squared”, “y cubed”, “to the power of 6”</p>
+</div>
+<div class="case">
+<p class="id">Test J13</p>
+<p class="sample">About ~50 people, ~20 left.</p>
+<p class="sample">About ~50 people, ~20 left.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“about approximately”, or “tilde”</p>
+</div>
+<div class="case">
+<p class="id">Test J14</p>
+<p class="sample">café, résumé, naïve, hôtel, jalapeño</p>
+<p class="sample">café, résumé, naïve, hôtel, jalapeño</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“e acute” or any accent name, or “resume” as the verb</p>
+</div>
+<div class="case">
+<p class="id">Test J15</p>
+<p class="sample">Visit https://www.gutenberg.org/ebooks or write to john.smith@mail.co.uk today.</p>
+<p class="sample">Visit https://www.gutenberg.org/ebooks or write to john.smith@mail.co.uk today.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“link”, “slash”, “h t t p”, “w w w”, or “at sign” — want “gutenberg dot org”</p>
+</div>
+<div class="case">
+<p class="id">Test J16</p>
+<p class="sample">St. Paul lives on Main St. in St. Louis.</p>
+<p class="sample">St. Paul lives on Main St. in St. Louis.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“Street Paul”, “Main Saint”, or “S T”</p>
+</div>
+<div class="case">
+<p class="id">Test J17</p>
+<p class="sample">23.5 miles, 2.3 kg, 0.75 cups</p>
+<p class="sample">23.5 miles, 2.3 kg, 0.75 cups</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">digits without “point” (“two three five miles”)</p>
+</div>
+<div class="case">
+<p class="id">Test J18</p>
+<p class="sample">In 1847 there were 1847 soldiers.</p>
+<p class="sample">In 1847 there were 1847 soldiers.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">year read as “one thousand eight hundred…”, or the count read as “eighteen forty seven soldiers”</p>
+</div>
+<div class="case">
+<p class="id">Test J19</p>
+<p class="sample">The 1990s and the ’80s</p>
+<p class="sample">The 1990s and the ’80s</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“ess”, or “one thousand nine hundred ninety”</p>
+</div>
+<div class="case">
+<p class="id">Test J20</p>
+<p class="sample">Note† and ‡ more</p>
+<p class="sample">Note† and ‡ more</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“dagger”, “double dagger”, or a pause after “Note”</p>
+</div>
+<div class="case">
+<p class="id">Test J21</p>
+<p class="sample">I read the book yesterday, and I will read it again. The wind was too strong to wind the sail. They refuse to sort the refuse. I object to that object.</p>
+<p class="sample">I read the book yesterday, and I will read it again. The wind was too strong to wind the sail. They refuse to sort the refuse. I object to that object.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“reed the book yesterday” (want “red”), both “wind” the same, both “refuse” the same, or both “object” the same</p>
+</div>
+<h2>K — Layout (headings and tables)</h2>
+<div class="case">
+<p class="id">Test K01</p>
+<p class="sample" style="margin:0">Three Word Header</p>
+<p class="sample" style="margin-top:0;font-weight:400">The text below a heading without a full stop starts here and must not run into it.</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“header the text below” with no pause after the heading</p>
+</div>
+<div class="case">
+<p class="id">Test K02</p>
+<table style="border-collapse:collapse;width:100%;font-size:11pt">
+<tr><th style="border:1px solid #888;width:22%;text-align:left">Planet</th><th style="border:1px solid #888;width:22%;text-align:left">Distance from Sun</th><th style="border:1px solid #888;text-align:left">Notes</th></tr>
+<tr><td style="border:1px solid #888;vertical-align:top">Mercury</td><td style="border:1px solid #888;vertical-align:top">58 million km</td><td style="border:1px solid #888">The smallest planet in the solar system and the closest one to the Sun, with almost no atmosphere.</td></tr>
+<tr><td style="border:1px solid #888;vertical-align:top">Mars and its two small moons</td><td style="border:1px solid #888;vertical-align:top">228 million km</td><td style="border:1px solid #888">Known as the Red Planet because of iron oxide dust on its surface.</td></tr>
+</table>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">cells mixed between rows or columns (“Mars and its two 228 million km Known as… small moons surface”) — want each row read in order: name, distance, notes</p>
+</div>
+<h2>Z — Control</h2>
+<div class="case">
+<p class="id">Test Z01</p>
+<p class="sample">The quick brown fox jumps over the lazy dog</p>
+<p class="sample">The quick brown fox jumps over the lazy dog</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“garbled plain English” (engine problem, not sanitizer)</p>
+</div>
+<div class="case">
+<p class="id">Test Z02</p>
+<p class="sample">End of stress test</p>
+<p class="sample">End of stress test</p>
+<p class="fail-lead">Test failed if you heard:</p>
+<p class="fail-body">“nothing” (you never reached the end)</p>
+</div>
+</body>
+</html>

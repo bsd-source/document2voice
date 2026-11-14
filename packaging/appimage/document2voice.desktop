@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Document2Voice (Kokoro)
+GenericName=Document to Audiobook
+Comment=Offline document-to-audiobook with Kokoro ONNX
+Exec=document2voice-gui
+Icon=document2voice
+Categories=AudioVideo;Audio;
+Terminal=false
+StartupNotify=true
+Keywords=TTS;audiobook;Kokoro;speech;PDF;EPUB;document;

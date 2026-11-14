@@ -1,0 +1,96 @@
+#!/bin/bash
+# Startup script for the Document2Voice (Kokoro) AppImage.
+# Puts the bundled programs and data first so the app can run without a full install.
+#
+# Your computer still supplies: the basic system library (glibc), the display
+# (X11 or Wayland), graphics drivers, and optionally system sound for Preview.
+# ffmpeg, speech tools, PDF tools, and the voice models are packed inside this file.
+
+set -euo pipefail
+
+HERE="$(dirname "$(readlink -f "$0")")"
+export APPDIR="${APPDIR:-$HERE}"
+
+# Prefer the programs bundled inside this AppImage.
+export PATH="${APPDIR}/usr/bin:${PATH:-}"
+
+# Prefer bundled libraries first; keep system ones after so display, graphics, and sound still work.
+lib_path=""
+for d in \
+  "${APPDIR}/usr/lib" \
+  "${APPDIR}/usr/lib64" \
+  "${APPDIR}/usr/lib/x86_64-linux-gnu" \
+  "${APPDIR}/lib" \
+  "${APPDIR}/lib64"
+do
+  if [ -d "$d" ]; then
+    if [ -z "$lib_path" ]; then
+      lib_path="$d"
+    else
+      lib_path="${lib_path}:$d"
+    fi
+  fi
+done
+if [ -n "$lib_path" ]; then
+  export LD_LIBRARY_PATH="${lib_path}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi
+
+# Point the app at the voice models inside this package (it also searches APPDIR on its own).
+if [ -d "${APPDIR}/usr/share/document2voice/models/kokoro" ]; then
+  export DOCUMENT2VOICE_MODEL_DIR="${APPDIR}/usr/share/document2voice/models/kokoro"
+fi
+
+# Point the speech engine at the data and binary bundled in this package.
+if [ -d "${APPDIR}/usr/share/espeak-ng-data" ]; then
+  export DOCUMENT2VOICE_ESPEAK_DATA="${APPDIR}/usr/share/espeak-ng-data"
+fi
+if [ -x "${APPDIR}/usr/bin/espeak-ng" ]; then
+  export DOCUMENT2VOICE_ESPEAK_BIN="${APPDIR}/usr/bin/espeak-ng"
+fi
+if [ -x "${APPDIR}/usr/bin/ffmpeg" ]; then
+  export DOCUMENT2VOICE_FFMPEG="${APPDIR}/usr/bin/ffmpeg"
+fi
+
+if [ -d "${APPDIR}/usr/share" ]; then
+  export XDG_DATA_DIRS="${APPDIR}/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"
+fi
+
+# Cache folder must be writable (the AppImage itself is often read-only).
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME:-/tmp}/.cache}"
+
+BIN_GUI="${APPDIR}/usr/bin/document2voice-gui"
+BIN_CLI="${APPDIR}/usr/bin/document2voice"
+
+require_gui() {
+  if [ ! -x "$BIN_GUI" ]; then
+    echo "Document2Voice (Kokoro): missing $BIN_GUI" >&2
+    exit 1
+  fi
+}
+
+case "${1:-}" in
+  cli|--cli)
+    shift
+    if [ ! -x "$BIN_CLI" ]; then
+      echo "Document2Voice (Kokoro): CLI not bundled in this AppImage" >&2
+      exit 1
+    fi
+    exec "$BIN_CLI" "$@"
+    ;;
+  gui|--gui)
+    shift
+    require_gui
+    exec "$BIN_GUI" "$@"
+    ;;
+  voices|extract|speak|synth-worker|help|--help|-h|--version|-V)
+    if [ -x "$BIN_CLI" ]; then
+      exec "$BIN_CLI" "$@"
+    fi
+    require_gui
+    exec "$BIN_GUI" "$@"
+    ;;
+  *)
+    require_gui
+    exec "$BIN_GUI" "$@"
+    ;;
+esac

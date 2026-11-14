@@ -1,0 +1,36 @@
+[package]
+name = "document2voice-gui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Iced GUI for Document2Voice (Kokoro) — offline document to audiobook"
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "document2voice-gui"
+path = "src/main.rs"
+
+[dependencies]
+document2voice-core.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+# Only `tokio::task::spawn_blocking` is used; iced brings its own runtime features.
+tokio = { workspace = true, features = ["rt"] }
+# XDG config dir (~/.config/document2voice/) — works for AppImage and normal installs.
+directories = "6"
+
+# Pure-Rust portable UI (AppImage-friendly)
+# `image` embeds PNG icons in the binary (no OS theme/icon path dependency).
+# No "debug" feature — that enables the F12 / iced-comet metrics overlay on launch.
+# `advanced` exposes text Highlighter for multi-color selectable log lines.
+iced = { version = "0.14", features = ["tokio", "image", "advanced"] }
+rfd = "0.15"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"

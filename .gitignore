@@ -1,0 +1,35 @@
+# Build output
+/target/
+/dist/
+*.AppImage
+
+# Kokoro models (~340 MB) — download with ./setup.sh
+/models/**
+!/models/.gitkeep
+*.onnx
+*.bin
+
+# Generated audio
+*.wav
+*.mp3
+*.opus
+*.flac
+
+# Local / editor
+.cache/
+.DS_Store
+Thumbs.db
+**/*.rs.bk
+*.swp
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# AppImage build intermediates (also under target/)
+target/appimage/
+target/appimage-cache/
+
+# Local GUI capture dumps
+/test-shots/
+RELEASE_NOTES.md

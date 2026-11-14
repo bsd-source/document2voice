@@ -1,0 +1,35 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/core",
+    "crates/cli",
+    "crates/gui",
+]
+default-members = ["crates/cli", "crates/gui"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+authors = ["document2voice contributors"]
+# iced 0.14 requires a recent stable (MSRV ~1.88).
+rust-version = "1.88"
+
+[workspace.dependencies]
+document2voice-core = { path = "crates/core" }
+anyhow = "1"
+thiserror = "2"
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["rt"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+which = "7"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+
+# Force pick-list menus to open downward (patched iced_widget overlay/menu).
+[patch.crates-io]
+iced_widget = { path = "crates/vendor/iced_widget" }
