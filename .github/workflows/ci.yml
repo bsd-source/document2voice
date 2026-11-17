@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --all --check
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Tests (no models needed; tool-dependent tests skip when a tool is missing)
+        run: cargo test --workspace
+      - name: Shell scripts
+        run: bash -n setup.sh build-appimage.sh && shellcheck -x -S error setup.sh build-appimage.sh
+      - name: Python helper
+        run: python3 -m py_compile packaging/appimage/collect-licenses.py
